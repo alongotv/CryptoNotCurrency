@@ -9,6 +9,7 @@ import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import java.io.File
+import kotlin.text.Charsets.UTF_16
 
 object Cryptographer {
     init {
@@ -56,15 +57,18 @@ object Cryptographer {
         val outputStream = encryptedFile.openFileOutput()
 
         outputStream.use {
-            it.write(text.toByteArray())
+            it.write(text.toByteArray(UTF_16))
         }
 
         val inputStream = encryptedFile.openFileInput()
         var decryptedText: String?
         inputStream.use {
-            decryptedText = it.bufferedReader().readText()
+            decryptedText = it.bufferedReader(UTF_16).readText()
         }
-        return Pair(decryptedText.orEmpty(), file.readText())
+
+        val encryptedByteArray = file.readBytes()
+        val encryptedString = encryptedByteArray.toString(UTF_16)
+        return Pair(decryptedText.orEmpty(), encryptedString)
     }
 
     fun setSharedPrefValue(context: Context): Int {
