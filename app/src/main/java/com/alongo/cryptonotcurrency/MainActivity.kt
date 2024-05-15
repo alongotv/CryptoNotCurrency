@@ -86,12 +86,13 @@ class MainActivity : ComponentActivity() {
                 ""
             }
         }
+        Column(Modifier.padding(16.dp)) {
         TextField(value = appPackageName.value, onValueChange = {
             appPackageName.value = it
         })
 
         Text(text = resultText)
-        Column {
+
             Button(onClick = {
                 isAppValid.value = Cryptographer.verifyApp(
                     context = ctx,
