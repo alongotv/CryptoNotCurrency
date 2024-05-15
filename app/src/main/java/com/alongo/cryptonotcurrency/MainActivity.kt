@@ -20,11 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.security.crypto.EncryptedFile
+import androidx.compose.ui.unit.dp
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.alongo.cryptonotcurrency.ui.theme.CryptoNotCurrencyTheme
-import java.io.File
 
 
 class MainActivity : ComponentActivity() {
@@ -47,9 +46,6 @@ class MainActivity : ComponentActivity() {
                         Content()
                     }
                 }
-                LaunchedEffect(Unit) {
-                    test()
-                }
             }
         }
     }
@@ -57,6 +53,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun Content() {
         PackageIdentityValidator()
+        FileEncrypter()
     }
 
     @Composable
@@ -99,6 +96,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun FileEncrypter() {
+        Column(Modifier.padding(16.dp)) {
+            val ctx = LocalContext.current
+            val textToEncrypt = remember {
+                mutableStateOf("Hello world!")
+            }
+            val encryptionResult = remember(textToEncrypt.value) {
+                Cryptographer.encryptText(ctx, filesDir, textToEncrypt.value)
+            }
+
+            TextField(value = textToEncrypt.value, onValueChange = {
+                textToEncrypt.value = it
+            })
+
+            Text(text = "Decrypted text: ${encryptionResult.first}")
+            Text(text = "Encrypted text: ${encryptionResult.second}")
+        }
+    }
+
     fun enc() {
         val sharedPreferences = EncryptedSharedPreferences.create(
             "shared_pref_file_encrypted",
@@ -109,27 +126,6 @@ class MainActivity : ComponentActivity() {
         )
         sharedPreferences.edit().putInt("example_int", 2).apply()
 
-    }
-
-    fun test() {
-        val file = File(filesDir, "encryptedFile")
-        if (file.exists()) {
-            file.delete()
-        }
-
-        val encryptedFile = EncryptedFile.Builder(
-            file,
-            this, masterKeyAlias, EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-        ).build()
-
-        val outputStream = encryptedFile.openFileOutput()
-
-        outputStream.use {
-            it.write("hello world".toByteArray())
-        }
-
-        val text = file.readText()
-        println(text)
     }
 }
 
