@@ -1,6 +1,7 @@
 package com.alongo.cryptonotcurrency
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import androidx.security.app.authenticator.AppAuthenticator
@@ -66,18 +67,27 @@ object Cryptographer {
         return Pair(decryptedText.orEmpty(), file.readText())
     }
 
-    fun updateSharedPref(context: Context): Int {
-        val sharedPreferences = EncryptedSharedPreferences.create(
+    fun setSharedPrefValue(context: Context): Int {
+        val sharedPreferences = getSharedPrefs(context)
+        val result = sharedPreferences.getInt(SHARED_PREFERENCES_INT_KEY, 0)
+        val newInt = result + 1
+        sharedPreferences.edit().putInt(SHARED_PREFERENCES_INT_KEY, newInt).apply()
+        return newInt
+    }
+
+    fun getSharedPrefValue(context: Context): Int {
+        val sharedPreferences = getSharedPrefs(context)
+        return sharedPreferences.getInt(SHARED_PREFERENCES_INT_KEY, 0)
+    }
+
+    private fun getSharedPrefs(context: Context): SharedPreferences {
+        return EncryptedSharedPreferences.create(
             "shared_pref_file_encrypted",
             masterKeyAlias,
             context,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
-        val result = sharedPreferences.getInt(SHARED_PREFERENCES_INT_KEY, 0)
-        val newInt = result + 1
-        sharedPreferences.edit().putInt(SHARED_PREFERENCES_INT_KEY, newInt).apply()
-        return newInt
     }
 }
 

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
     fun Content() {
         PackageIdentityValidator()
         FileEncrypter()
+        SharedPrefsInteractor()
     }
 
     @Composable
@@ -80,11 +82,11 @@ class MainActivity : ComponentActivity() {
             }
         }
         Column(Modifier.padding(16.dp)) {
-        TextField(value = appPackageName.value, onValueChange = {
-            appPackageName.value = it
-        }, Modifier.fillMaxWidth())
+            TextField(value = appPackageName.value, onValueChange = {
+                appPackageName.value = it
+            }, Modifier.fillMaxWidth())
 
-        Text(text = resultText)
+            Text(text = resultText)
 
             Button(onClick = {
                 isAppValid.value = Cryptographer.verifyApp(
@@ -119,6 +121,18 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun SharedPrefsInteractor() {
+        val ctx = LocalContext.current
 
+        val currentSharedPrefValue = remember {
+            mutableIntStateOf(Cryptographer.getSharedPrefValue(ctx))
+        }
+        Column(Modifier.padding(16.dp)) {
+            Text(text = "Current shared pref value: ${currentSharedPrefValue.intValue}")
+            Button(onClick = {
+                currentSharedPrefValue.intValue = Cryptographer.setSharedPrefValue(ctx)
+            }, Modifier.padding(top = 8.dp)) {
+                Text(text = "Update value")
+            }
+        }
     }
 }
