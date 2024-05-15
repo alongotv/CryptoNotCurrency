@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -61,7 +62,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun PackageIdentityValidator() {
         val ctx = LocalContext.current
-        val isAppValid = remember {
+        val appPackageName = remember {
+            mutableStateOf("org.telegram.messenger")
+        }
+
+        val isAppValid = remember(appPackageName) {
             mutableStateOf<Boolean?>(null)
         }
         val resultText = when (isAppValid.value) {
@@ -77,12 +82,16 @@ class MainActivity : ComponentActivity() {
                 ""
             }
         }
+        TextField(value = appPackageName.value, onValueChange = {
+            appPackageName.value = it
+        })
+
         Text(text = resultText)
         Column {
             Button(onClick = {
                 isAppValid.value = Cryptographer.verifyApp(
                     context = ctx,
-                    packageName = "org.telegram.messenger"
+                    packageName = appPackageName.value
                 )
             }) {
                 Text(text = "verify app")
