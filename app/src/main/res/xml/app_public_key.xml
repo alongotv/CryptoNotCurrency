@@ -3,7 +3,7 @@
     <expected-identity>
         <package name="org.telegram.messenger">
             <cert-digest>
-                0cfb4663831a0fb8d6973aad44e221a8ba78f7f684bd0b17d3b44bec82316484
+                49c1522548ebacd46ce322b6fd47f6092bb745d0f88082145caf35e14dcc38e1
             </cert-digest>
         </package>
     </expected-identity>
