@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Content(modifier: Modifier = Modifier) {
+    fun Content() {
         PackageIdentityValidator()
     }
 
