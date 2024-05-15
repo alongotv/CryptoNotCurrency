@@ -31,14 +31,6 @@ import com.alongo.cryptonotcurrency.ui.theme.CryptoNotCurrencyTheme
 
 
 class MainActivity : ComponentActivity() {
-    private val kgps: KeyGenParameterSpec =
-        KeyGenParameterSpec.Builder(
-            masterKeyAlias, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-        )
-            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setKeySize(masterKeySizeBits)
-            .build().apply { MasterKeys.getOrCreate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,18 +117,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    fun enc() {
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            "shared_pref_file_encrypted",
-            masterKeyAlias,
-            this,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-        sharedPreferences.edit().putInt("example_int", 2).apply()
+    @Composable
+    fun SharedPrefsInteractor() {
 
     }
 }
-
-const val masterKeyAlias = "notcrypto"
-const val masterKeySizeBits = 256
