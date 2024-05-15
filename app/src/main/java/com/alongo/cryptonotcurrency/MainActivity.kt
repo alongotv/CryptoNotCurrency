@@ -14,9 +14,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.security.app.authenticator.AppAuthenticator
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -42,9 +44,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CryptoNotCurrencyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Content(
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        Content()
+                    }
                 }
                 LaunchedEffect(Unit) {
                     test()
@@ -54,9 +56,32 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun Content(modifier: Modifier) {
+    fun Content(modifier: Modifier = Modifier) {
+        val ctx = LocalContext.current
+        val isAppValid = remember {
+            mutableStateOf<Boolean?>(null)
+        }
+        val resultText = when (isAppValid.value) {
+            true -> {
+                "The application has a valid signature"
+            }
+
+            false -> {
+                "The application has invalid signature or is not installed"
+            }
+
+            else -> {
+                ""
+            }
+        }
+        Text(text = resultText)
         Column(modifier) {
-            Button(onClick = { ver() }) {
+            Button(onClick = {
+                isAppValid.value = Cryptographer.verifyApp(
+                    context = ctx,
+                    packageName = "org.telegram.messenger"
+                )
+            }) {
                 Text(text = "verify app")
             }
         }
@@ -72,21 +97,6 @@ class MainActivity : ComponentActivity() {
         )
         sharedPreferences.edit().putInt("example_int", 2).apply()
 
-    }
-
-    fun ver() {
-
-        val result = AppAuthenticator.createFromResource(this, R.xml.app_public_key)
-            .checkAppIdentity("org.telegram.messenger")
-        when (result) {
-            AppAuthenticator.SIGNATURE_MATCH -> {
-                println("Application has a valid signature")
-            }
-
-            AppAuthenticator.SIGNATURE_NO_MATCH -> {
-                println("Application has invalid signature or is not installed")
-            }
-        }
     }
 
     fun test() {
