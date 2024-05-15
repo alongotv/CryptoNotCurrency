@@ -57,6 +57,11 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Content(modifier: Modifier = Modifier) {
+        PackageIdentityValidator()
+    }
+
+    @Composable
+    fun PackageIdentityValidator() {
         val ctx = LocalContext.current
         val isAppValid = remember {
             mutableStateOf<Boolean?>(null)
@@ -75,7 +80,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         Text(text = resultText)
-        Column(modifier) {
+        Column {
             Button(onClick = {
                 isAppValid.value = Cryptographer.verifyApp(
                     context = ctx,
@@ -115,6 +120,9 @@ class MainActivity : ComponentActivity() {
         outputStream.use {
             it.write("hello world".toByteArray())
         }
+
+        val text = file.readText()
+        println(text)
     }
 }
 
