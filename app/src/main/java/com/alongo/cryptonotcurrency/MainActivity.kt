@@ -33,10 +33,8 @@ class MainActivity : ComponentActivity() {
         )
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .setKeySize(256)
-            .build()
-
-    private val masterKey = MasterKeys.getOrCreate(kgps)
+            .setKeySize(masterKeySizeBits)
+            .build().apply { MasterKeys.getOrCreate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,3 +141,4 @@ fun GreetingPreview() {
 }
 
 const val masterKeyAlias = "notcrypto"
+const val masterKeySizeBits = 256
