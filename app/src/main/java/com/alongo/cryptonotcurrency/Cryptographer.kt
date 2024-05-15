@@ -6,7 +6,7 @@ import androidx.security.app.authenticator.AppAuthenticator
 object Cryptographer {
     fun verifyApp(context: Context, packageName: String): Boolean {
         val result = AppAuthenticator.createFromResource(context, R.xml.app_public_key)
-            .checkAppIdentity("org.telegram.messenger")
+            .checkAppIdentity(packageName)
         return when (result) {
             AppAuthenticator.SIGNATURE_MATCH -> {
                 println("Application has a valid signature")
