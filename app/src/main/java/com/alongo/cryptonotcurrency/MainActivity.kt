@@ -10,6 +10,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
@@ -89,7 +90,7 @@ class MainActivity : ComponentActivity() {
         Column(Modifier.padding(16.dp)) {
         TextField(value = appPackageName.value, onValueChange = {
             appPackageName.value = it
-        })
+        }, Modifier.fillMaxWidth())
 
         Text(text = resultText)
 
@@ -117,7 +118,7 @@ class MainActivity : ComponentActivity() {
 
             TextField(value = textToEncrypt.value, onValueChange = {
                 textToEncrypt.value = it
-            })
+            }, Modifier.fillMaxWidth())
 
             Text(text = "Decrypted text: ${encryptionResult.first}")
             Text(text = "Encrypted text: ${encryptionResult.second}")
