@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        masterKey
         setContent {
             CryptoNotCurrencyTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -78,7 +77,7 @@ class MainActivity : ComponentActivity() {
     fun ver() {
 
         val result = AppAuthenticator.createFromResource(this, R.xml.app_public_key)
-            .checkAppIdentity("com.voltasit.obdeleven")
+            .checkAppIdentity("org.telegram.messenger")
         when (result) {
             AppAuthenticator.SIGNATURE_MATCH -> {
                 println("Application has a valid signature")

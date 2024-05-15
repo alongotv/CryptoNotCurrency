@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <app-authenticator>
     <expected-identity>
-        <package name="com.voltasit.obdeleven">
+        <package name="org.telegram.messenger">
             <cert-digest>
                 0cfb4663831a0fb8d6973aad44e221a8ba78f7f684bd0b17d3b44bec82316484
             </cert-digest>
